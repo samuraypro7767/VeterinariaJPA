@@ -3,7 +3,7 @@ package com.osorio.aplicacion;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
-public class JPAutil {
+public class JPAUtil {
     private static final String UNIDAD_DE_PERSISTENCIA="PruebaHibernate";
     private static EntityManagerFactory factory;
     public static EntityManagerFactory getEntityManagerFactory() {

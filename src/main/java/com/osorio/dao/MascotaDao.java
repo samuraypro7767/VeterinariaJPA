@@ -1,20 +1,30 @@
 package com.osorio.dao;
-import com.osorio.aplicacion.JPAutil;
+import com.osorio.aplicacion.JPAUtil;
 import com.osorio.entidades.Mascota;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MascotaDao {
-    EntityManager entityManager=JPAutil.getEntityManagerFactory().createEntityManager();
-    public String registrarMascota(Mascota miMascota) {
-        entityManager.getTransaction().begin();
-        entityManager.persist(miMascota);
-        entityManager.getTransaction().commit();
-        String resp="Mascota Registrada!";
-        return resp;
+    EntityManager entityManager=JPAUtil.getEntityManagerFactory().createEntityManager();
+
+    public String registrarMascota(Mascota miMascota){
+        String respuesta="";
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.persist(miMascota);
+            entityManager.getTransaction().commit();
+
+            respuesta= "Mascota Registrada;";
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "No se puede registrar" + "la mascota verifique que el dueño exista", "ERROR" ,JOptionPane.ERROR_MESSAGE );
+        }
+        return respuesta;
     }
+
     public Mascota consultarMascota(Long idMascota) {
         Mascota miMascota=entityManager.find(Mascota.class,idMascota);
         if (miMascota!=null) {
@@ -23,6 +33,7 @@ public class MascotaDao {
             return null;
         }
     }
+
     public List<Mascota> consultarListaMascotas() {
         List<Mascota> listaMascotas=new ArrayList<Mascota>();
         Query query=entityManager.createQuery("SELECT m FROM Mascota m");
@@ -37,13 +48,22 @@ public class MascotaDao {
         listaMascotas=query.getResultList();
         return listaMascotas;
     }
+
     public String actualizarMascota(Mascota miMascota) {
-        entityManager.getTransaction().begin();
-        entityManager.merge(miMascota);
-        entityManager.getTransaction().commit();
-        String resp="Mascota Actualizada!";
-        return resp;
+        String respuesta = "";
+        try{
+            entityManager.getTransaction().begin();
+            entityManager.merge(miMascota);
+            entityManager.getTransaction().commit();
+
+            respuesta="Mascota Actualizada!";
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "No se puede actualizar" + "verifique que el dueño de la mascota exista", "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+        return respuesta;
     }
+
+
     public String eliminarMascota(Mascota miMascota) {
         entityManager.getTransaction().begin();
         entityManager.remove(miMascota);
@@ -51,8 +71,10 @@ public class MascotaDao {
         String resp="Mascota Eliminada!";
         return resp;
     }
+
     public void close() {
         entityManager.close();
-        JPAutil.shutdown();
+        JPAUtil.shutdown();
     }
 }
+
